@@ -1,0 +1,9 @@
+{
+    "name": "mach/silex-rest",
+    "require": {
+        "silex/silex": "1.0.*@dev"
+    },
+    "autoload": {
+        "psr-0": { "Mach\\Silex\\Rest\\": "src" }
+    }
+}
