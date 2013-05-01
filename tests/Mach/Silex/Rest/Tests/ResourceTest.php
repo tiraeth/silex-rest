@@ -14,6 +14,7 @@ namespace Mach\Silex\Rest\Tests;
 use Mach\Silex\Rest\Provider\RestApplicationServiceProvider;
 use Mach\Silex\Rest\Resource;
 use Mach\Silex\Rest\Tests\Application\RestApplication;
+use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,7 +67,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $res = $app->resource('/items')
+        $res = $app['rest']->resource('/items')
             ->get(function(Request $request, $item){
                 return "get-$item";
             })
@@ -84,7 +85,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
         $app->error(function(\Exception $e){ return 'fail'; });
 
-        $res = $app->resource('/items')
+        $res = $app['rest']->resource('/items')
             ->get(function(Request $request, $id){ return 'ok'; })
             ->assertId('\d+')
         ;
@@ -97,7 +98,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $res = $app->resource('/items')
+        $res = $app['rest']->resource('/items')
             ->get(function(Request $request, $id){ return "get-$id"; })
             ->put(function(Request $request, $id){ return "put-$id"; })
             ->before('get', function(Request $request){
@@ -118,7 +119,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testController()
     {
-        $app = new RestApplication();
+        $app = new Application();
         $app->register(new ServiceControllerServiceProvider());
         $app->register(new RestApplicationServiceProvider(), array(
             'rest.methods.cget' => 'all',
@@ -129,7 +130,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             return $e->getMessage();
         });
 
-        $res = $app->resource('/items', new Controller($app));
+        $res = $app['rest']->resource('/items', new Controller($app));
 
         // Test route's custom handle method
         $this->assertEquals('cget', $app->handle(Request::create('/items'))->getContent());
@@ -140,7 +141,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testControllerAsService()
     {
-        $app = new RestApplication();
+        $app = new Application();
         $app->register(new ServiceControllerServiceProvider());
         $app->register(new RestApplicationServiceProvider(), array(
             'rest.methods.cget' => 'all',
@@ -155,7 +156,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             return new Controller($app);
         });
 
-        $res = $app->resource('/items', 'items.controller');
+        $res = $app['rest']->resource('/items', 'items.controller');
 
         // Test route's custom handle method
         $this->assertEquals('cget', $app->handle(Request::create('/items'))->getContent());
@@ -174,9 +175,9 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         return $subres;
     }
 
-    protected function createResource(RestApplication $app)
+    protected function createResource(Application $app)
     {
-        $res = $app->resource('/items');
+        $res = $app['rest']->resource('/items');
 
         $res->cget(function(Request $request){ return 'cget'; });
         $res->post(function(Request $request){ return 'post'; });
@@ -190,7 +191,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
     protected function createApplication()
     {
-        $app = new RestApplication();
+        $app = new Application();
         $app->register(new ServiceControllerServiceProvider());
         $app->register(new RestApplicationServiceProvider());
 

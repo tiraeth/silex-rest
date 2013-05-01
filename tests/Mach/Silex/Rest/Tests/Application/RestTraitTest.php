@@ -17,6 +17,9 @@ use Mach\Silex\Rest\Provider\RestApplicationServiceProvider;
 use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 
+/**
+ * @requires PHP 5.4
+ */
 class RestTraitTest extends \PHPUnit_Framework_TestCase
 {
     public function testResource()
