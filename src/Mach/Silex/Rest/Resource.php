@@ -42,12 +42,12 @@ class Resource
         $this->prefix = str_replace('/', '_', $this->prefix);
 
         if ($controller !== null) {
-            $this->routes['cget'] = $this->cget(sprintf('%s:%s', $controller, $app['rest.methods.cget']));
-            $this->routes['post'] = $this->post(sprintf('%s:%s', $controller, $app['rest.methods.post']));
-            $this->routes['get'] = $this->get(sprintf('%s:%s', $controller, $app['rest.methods.get']));
-            $this->routes['put'] = $this->put(sprintf('%s:%s', $controller, $app['rest.methods.put']));
-            $this->routes['patch'] = $this->patch(sprintf('%s:%s', $controller, $app['rest.methods.patch']));
-            $this->routes['delete'] = $this->delete(sprintf('%s:%s', $controller, $app['rest.methods.delete']));
+            $this->cget(sprintf('%s:%s', $controller, $app['rest.methods.cget']));
+            $this->post(sprintf('%s:%s', $controller, $app['rest.methods.post']));
+            $this->get(sprintf('%s:%s', $controller, $app['rest.methods.get']));
+            $this->put(sprintf('%s:%s', $controller, $app['rest.methods.put']));
+            $this->patch(sprintf('%s:%s', $controller, $app['rest.methods.patch']));
+            $this->delete(sprintf('%s:%s', $controller, $app['rest.methods.delete']));
         }
     }
 
@@ -177,6 +177,7 @@ class Resource
     {
         $controllerClass = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", $controllerClass);
         $controllerClass = str_replace('\\', '.', $controllerClass);
+        $controllerClass = strtolower($controllerClass);
         
         return $controllerClass;
     }
