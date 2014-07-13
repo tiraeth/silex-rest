@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "silex/silex": "1.0.*@dev"
+        "silex/silex": "~1.0"
     },
     "autoload": {
         "psr-0": { "Mach\\Silex\\Rest\\": "src" }
