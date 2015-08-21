@@ -23,7 +23,7 @@ class Resource
     public function __construct(Application $app, $path, $controller = null, $idVariable = 'id')
     {
         if (is_object($controller)) {
-            $controllerClass = static::underscoreDot(get_class($controller));
+            $controllerClass = static::underscoreDot(get_class($controller).$path);
 
             $app[$controllerClass] = $app->share(function () use ($controller) {
                 return $controller;
