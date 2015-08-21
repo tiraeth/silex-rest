@@ -25,10 +25,10 @@ class RestApplicationServiceProvider implements ServiceProviderInterface
         }
 
         foreach (array('cget', 'post', 'get', 'put', 'patch', 'delete') as $method) {
-            $app['rest.methods.' . $method] = $method;
+            $app['rest.methods.'.$method] = $method;
         }
 
-        $app['rest'] = $app->share(function($app){
+        $app['rest'] = $app->share(function ($app) {
             return new RestService($app);
         });
     }

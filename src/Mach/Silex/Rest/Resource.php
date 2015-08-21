@@ -24,8 +24,8 @@ class Resource
     {
         if (is_object($controller)) {
             $controllerClass = static::underscoreDot(get_class($controller));
-            
-            $app[$controllerClass] = $app->share(function() use ($controller) {
+
+            $app[$controllerClass] = $app->share(function () use ($controller) {
                 return $controller;
             });
 
@@ -38,7 +38,7 @@ class Resource
         $this->routes = array();
 
         $this->prefix = substr($path, 1);
-        $this->prefix = str_replace('/{' . $idVariable . '}', '', $this->prefix);
+        $this->prefix = str_replace('/{'.$idVariable.'}', '', $this->prefix);
         $this->prefix = str_replace('/', '_', $this->prefix);
 
         if ($controller !== null) {
@@ -53,16 +53,16 @@ class Resource
 
     protected function itemPath()
     {
-        return $this->path . '/{' . $this->idVariable . '}';
+        return $this->path.'/{'.$this->idVariable.'}';
     }
 
     public function subresource($path, $controller = null, $idVariable = null)
     {
         if ($idVariable === null) {
-            $idVariable = $this->idVariable . 'd';
+            $idVariable = $this->idVariable.'d';
         }
-        
-        return new Resource($this->app, $this->itemPath() . $path, $controller, $idVariable);
+
+        return new self($this->app, $this->itemPath().$path, $controller, $idVariable);
     }
 
     public function route($routeName)
@@ -70,7 +70,7 @@ class Resource
         if (!array_key_exists($routeName, $this->routes)) {
             return false;
         }
-        
+
         return $this->routes[$routeName];
     }
 
@@ -78,7 +78,7 @@ class Resource
     {
         $this->routes['cget'] = $this->app
             ->get($this->path, $controller)
-            ->bind($this->prefix . '_cget');
+            ->bind($this->prefix.'_cget');
 
         return $this;
     }
@@ -87,7 +87,7 @@ class Resource
     {
         $this->routes['post'] = $this->app
             ->post($this->path, $controller)
-            ->bind($this->prefix . '_post');
+            ->bind($this->prefix.'_post');
 
         return $this;
     }
@@ -96,7 +96,7 @@ class Resource
     {
         $this->routes['get'] = $this->app
             ->get($this->itemPath(), $controller)
-            ->bind($this->prefix . '_get');
+            ->bind($this->prefix.'_get');
 
         return $this;
     }
@@ -105,7 +105,7 @@ class Resource
     {
         $this->routes['put'] = $this->app
             ->put($this->itemPath(), $controller)
-            ->bind($this->prefix . '_put');
+            ->bind($this->prefix.'_put');
 
         return $this;
     }
@@ -115,7 +115,7 @@ class Resource
         $this->routes['patch'] = $this->app
             ->match($this->itemPath(), $controller)
             ->method('PATCH')
-            ->bind($this->prefix . '_patch');
+            ->bind($this->prefix.'_patch');
 
         return $this;
     }
@@ -124,7 +124,7 @@ class Resource
     {
         $this->routes['delete'] = $this->app
             ->delete($this->itemPath(), $controller)
-            ->bind($this->prefix . '_delete');
+            ->bind($this->prefix.'_delete');
 
         return $this;
     }
@@ -175,10 +175,10 @@ class Resource
 
     public static function underscoreDot($controllerClass)
     {
-        $controllerClass = preg_replace('/([^A-Z])([A-Z])/', "$1_$2", $controllerClass);
+        $controllerClass = preg_replace('/([^A-Z])([A-Z])/', '$1_$2', $controllerClass);
         $controllerClass = str_replace('\\', '.', $controllerClass);
         $controllerClass = strtolower($controllerClass);
-        
+
         return $controllerClass;
     }
 }

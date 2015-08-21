@@ -13,12 +13,10 @@ namespace Mach\Silex\Rest\Tests;
 
 use Mach\Silex\Rest\Provider\RestApplicationServiceProvider;
 use Mach\Silex\Rest\Resource;
-use Mach\Silex\Rest\Tests\Application\RestApplication;
 use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ResourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,7 +51,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $app = $this->createApplication();
         $this->createSubresource($this->createResource($app));
 
-        $app->error(function(\Exception $ex){ return 'no-route'; });
+        $app->error(function (\Exception $ex) { return 'no-route'; });
 
         $this->assertEquals('1-cget', $app->handle(Request::create('/items/1/comments'))->getContent());
         $this->assertEquals('1-get-1', $app->handle(Request::create('/items/1/comments/1'))->getContent());
@@ -68,11 +66,11 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $app = $this->createApplication();
 
         $res = $app['rest']->resource('/items')
-            ->get(function(Request $request, $item){
+            ->get(function (Request $request, $item) {
                 return "get-$item";
             })
-            ->convert('item', function($item, Request $request){
-                return '00' . $request->attributes->get('id');
+            ->convert('item', function ($item, Request $request) {
+                return '00'.$request->attributes->get('id');
             })
         ;
 
@@ -83,10 +81,10 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $app->error(function(\Exception $e){ return 'fail'; });
+        $app->error(function (\Exception $e) { return 'fail'; });
 
         $res = $app['rest']->resource('/items')
-            ->get(function(Request $request, $id){ return 'ok'; })
+            ->get(function (Request $request, $id) { return 'ok'; })
             ->assertId('\d+')
         ;
 
@@ -99,9 +97,9 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $app = $this->createApplication();
 
         $res = $app['rest']->resource('/items')
-            ->get(function(Request $request, $id){ return "get-$id"; })
-            ->put(function(Request $request, $id){ return "put-$id"; })
-            ->before('get', function(Request $request){
+            ->get(function (Request $request, $id) { return "get-$id"; })
+            ->put(function (Request $request, $id) { return "put-$id"; })
+            ->before('get', function (Request $request) {
                 $request->attributes->set('id', 2);
             })
         ;
@@ -109,8 +107,8 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('get-2', $app->handle(Request::create('/items/1'))->getContent());
         $this->assertEquals('put-1', $app->handle(Request::create('/items/1', 'PUT'))->getContent());
 
-        $res->after('get', function(Request $request, Response $response){
-            $response->setContent('do-' . $response->getContent());
+        $res->after('get', function (Request $request, Response $response) {
+            $response->setContent('do-'.$response->getContent());
         });
 
         $this->assertEquals('do-get-2', $app->handle(Request::create('/items/1'))->getContent());
@@ -126,7 +124,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             'rest.methods.post' => 'create',
         ));
 
-        $app->error(function(\Exception $e){
+        $app->error(function (\Exception $e) {
             return $e->getMessage();
         });
 
@@ -134,7 +132,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
         // Test route's custom handle method
         $this->assertEquals('cget', $app->handle(Request::create('/items'))->getContent());
-        
+
         // Test disabled route
         $this->assertEquals('Resource does not support this method.', $app->handle(Request::create('/items', 'POST'))->getContent());
     }
@@ -148,11 +146,11 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             'rest.methods.post' => 'create',
         ));
 
-        $app->error(function(\Exception $e){
+        $app->error(function (\Exception $e) {
             return $e->getMessage();
         });
 
-        $app['items.controller'] = $app->share(function($app){
+        $app['items.controller'] = $app->share(function ($app) {
             return new Controller($app);
         });
 
@@ -160,7 +158,7 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
 
         // Test route's custom handle method
         $this->assertEquals('cget', $app->handle(Request::create('/items'))->getContent());
-        
+
         // Test disabled route
         $this->assertEquals('Resource does not support this method.', $app->handle(Request::create('/items', 'POST'))->getContent());
     }
@@ -169,8 +167,8 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $subres = $res->subresource('/comments', null, 'cid');
 
-        $subres->cget(function(Request $request, $id){ return "$id-cget"; });
-        $subres->get(function(Request $request, $id, $cid){ return "$id-get-$cid"; });
+        $subres->cget(function (Request $request, $id) { return "$id-cget"; });
+        $subres->get(function (Request $request, $id, $cid) { return "$id-get-$cid"; });
 
         return $subres;
     }
@@ -179,12 +177,12 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
     {
         $res = $app['rest']->resource('/items');
 
-        $res->cget(function(Request $request){ return 'cget'; });
-        $res->post(function(Request $request){ return 'post'; });
-        $res->get(function(Request $request, $id){ return "get-$id"; });
-        $res->put(function(Request $request, $id){ return "put-$id"; });
-        $res->patch(function(Request $request, $id){ return "patch-$id"; });
-        $res->delete(function(Request $request, $id){ return "delete-$id"; });
+        $res->cget(function (Request $request) { return 'cget'; });
+        $res->post(function (Request $request) { return 'post'; });
+        $res->get(function (Request $request, $id) { return "get-$id"; });
+        $res->put(function (Request $request, $id) { return "put-$id"; });
+        $res->patch(function (Request $request, $id) { return "patch-$id"; });
+        $res->delete(function (Request $request, $id) { return "delete-$id"; });
 
         return $res;
     }

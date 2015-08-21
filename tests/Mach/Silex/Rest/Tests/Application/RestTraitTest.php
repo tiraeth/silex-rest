@@ -12,9 +12,7 @@
 
 namespace Mach\Silex\Rest\Tests\Application;
 
-use Mach\Silex\Rest\Application\RestTrait;
 use Mach\Silex\Rest\Provider\RestApplicationServiceProvider;
-use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 
 /**
