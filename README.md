@@ -16,10 +16,9 @@ Unfortunately there is no option to automatically create custom route for ```PAT
 
 The library requires you to have ```ServiceControllerServiceProvider``` enabled because I recommend you to use a class for a resource's controller. This way you can keep your application well-organized and reuse the controllers in Symfony2, for instance. And if you decide to keep your controllers with Silex only, you can use ```ApplicationAwareController``` which implements ```disable()``` to fastly throw 404 in case of your will to hide some actions from users, and delegates method calls to ```$app``` (passed by constructor) if needed.
 
-
 ## Installation w/ Composer
 
-1. Add requirement using CLI: ```php composer.phar require mach/silex-rest:dev-master```.
+1. Add requirement using CLI: ```php composer.phar require "mach/silex-rest:~2.0@dev"```.
 2. Update the requirement ```php composer.phar update mach/silex-rest```.
 
 Alternatively you can add the requirement manually:
@@ -29,7 +28,7 @@ Alternatively you can add the requirement manually:
     ...
     "require": {
         ...
-        "mach/silex-rest": "dev-master",
+        "mach/silex-rest": "~2.0@dev",
         ...
     },
     ...
@@ -126,9 +125,9 @@ You can use an existing service controller or register one automatically when pa
 ```php
 <?php
 
-$app['rest.users.controller'] = $app->share(function($app){
+$app['rest.users.controller'] = function($app){
     return new UsersController();
-});
+};
 
 $app['rest']->resource('/users', 'rest.users.controller');
 ```
