@@ -150,9 +150,9 @@ class ResourceTest extends \PHPUnit_Framework_TestCase
             return $e->getMessage();
         });
 
-        $app['items.controller'] = $app->share(function ($app) {
+        $app['items.controller'] = function ($app) {
             return new Controller($app);
-        });
+        };
 
         $res = $app['rest']->resource('/items', 'items.controller');
 

@@ -12,13 +12,13 @@
 namespace Mach\Silex\Rest\Provider;
 
 use Mach\Silex\Rest\RestService;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Silex\ServiceControllerResolver;
 
 class RestApplicationServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         if (!($app['resolver'] instanceof ServiceControllerResolver)) {
             throw new \RuntimeException('Register ServiceControllerServiceProvider first.');
@@ -28,12 +28,8 @@ class RestApplicationServiceProvider implements ServiceProviderInterface
             $app['rest.methods.'.$method] = $method;
         }
 
-        $app['rest'] = $app->share(function ($app) {
+        $app['rest'] = function ($app) {
             return new RestService($app);
-        });
-    }
-
-    public function boot(Application $app)
-    {
+        };
     }
 }
