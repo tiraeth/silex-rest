@@ -19,7 +19,7 @@ The library requires you to have ```ServiceControllerServiceProvider``` enabled 
 
 ## Installation w/ Composer
 
-1. Add requirement using CLI: ```php composer.phar require mach/silex-rest:dev-master```.
+1. Add requirement using CLI: ```php composer.phar require "mach/silex-rest:~1.0"```.
 2. Update the requirement ```php composer.phar update mach/silex-rest```.
 
 Alternatively you can add the requirement manually:
@@ -29,7 +29,7 @@ Alternatively you can add the requirement manually:
     ...
     "require": {
         ...
-        "mach/silex-rest": "dev-master",
+        "mach/silex-rest": "~1.0",
         ...
     },
     ...
